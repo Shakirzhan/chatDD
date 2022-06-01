@@ -7,14 +7,25 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'controllerNamespace' => 'api\modules\v1\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'modules' => [
+        'v1' => [
+            'basePath' => '@app/modules/v1',
+            'class' => 'api\modules\v1\Module'
+        ]
+    ],
     'components' => [
+        
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'aeaeaeeaaekljaekljealkejea',
+            'application/json' => 'yii\web\JsonParser',
+        ],
+        'response' => [
+      
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -43,14 +54,17 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+              ['class' => 'yii\rest\UrlRule', 'controller' => 'item'],
+              ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
             ],
         ],
-        */
+      
     ],
     'params' => $params,
 ];
