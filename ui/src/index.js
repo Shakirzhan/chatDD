@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-const App = () => <div>HHHHH</div>
+import SignInSide from './auth'
 
-ReactDOM.render(<App />,
+ReactDOM.render(
+  <SignInSide />,
   document.querySelector("#root")
 );
