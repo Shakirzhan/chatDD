@@ -6,14 +6,16 @@ module.exports = {
   mode: "development",
   output: {
     filename: "./main.js",
-    chunkFilename: "[name].bundle.js"
+    chunkFilename: "[name].bundle.js",
+    publicPath: '/'
   },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
     port: 9000,
     watchContentBase: true,
-    progress: true
+    progress: true,
+    historyApiFallback: true,
   },
   plugins: [
     new MiniCssExtractPlugin({

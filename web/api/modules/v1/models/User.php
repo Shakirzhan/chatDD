@@ -3,8 +3,6 @@
 namespace app\api\modules\v1\models;
 
 use Yii;
-use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
 
 class User extends UserIdentity

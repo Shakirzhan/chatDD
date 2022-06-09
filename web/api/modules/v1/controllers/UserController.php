@@ -3,10 +3,56 @@ namespace app\api\modules\v1\controllers;
 
 use app\api\modules\v1\models\User;
 use app\api\modules\v1\models\Status;
+use yii\filters\AccessControl;
 use Yii;
  
 class UserController extends DefaultController
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['authenticator']['except'] = ['options', 'login'];
+
+        return $behaviors;
+    }
+
+    public function actionLogin()
+    {
+        $params = Yii::$app->request->post();
+        if(empty($params['username']) || empty($params['password'])) return [
+            'status' => Status::STATUS_BAD_REQUEST,
+            'message' => "Need username and password.",
+            'data' => ''
+        ];
+
+        $user = User::findByUsername($params['username']);
+
+        if ($user->validatePassword($params['password'])) {
+            if(isset($params['consumer'])) $user->consumer = $params['consumer'];
+            if(isset($params['access_given'])) $user->access_given = $params['access_given'];
+
+
+            $user->generateAuthKey();
+            $user->save();
+            return [
+                'status' => Status::STATUS_OK,
+                'message' => 'Login Succeed, save your token',
+                'data' => [
+                    'id' => $user->username,
+                    'token' => $user->auth_key,
+                    'email' => $user['email'],
+                ]
+            ];
+        } else {
+            Yii::$app->response->statusCode = Status::STATUS_UNAUTHORIZED;
+            return [
+                'status' => Status::STATUS_UNAUTHORIZED,
+                'message' => 'Username and Password not found. Check Again!',
+                'data' => ''
+            ];
+        }
+    }
 
     public function actionSignup()
     {

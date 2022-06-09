@@ -67,8 +67,15 @@ $config = [
             'showScriptName' => false,
             // Disable r= routes
             'enablePrettyUrl' => true,
+            //'suffix' => '.html',
             'rules' => [
                 'POST signup' => 'v1/user/signup',
+
+                'POST login' => 'v1/user/login',
+                'OPTIONS login' => 'v1/user/options',
+
+                'GET list' => 'v1/list/item',
+                'OPTIONS list' => 'v1/list/options',
             ]
         ],
       

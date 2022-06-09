@@ -4,6 +4,7 @@ namespace app\api\modules\v1\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use Yii;
 
 /**
  * AccessToken Class for access_token table.
