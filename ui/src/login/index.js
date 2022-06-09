@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import { useNavigate, useLocation } from "react-router-dom";
 
 import api from '../api';
 
@@ -27,7 +28,14 @@ function Copyright(props) {
   );
 }
 
-export default class Signin extends React.Component {
+const WrappLogin = () => {
+  const history = useNavigate()
+  const location = useLocation()
+
+  return <Login history={history} location={location} />
+}
+
+class Login extends React.Component {
   constructor(props) {
     super(props);
     
@@ -46,9 +54,13 @@ export default class Signin extends React.Component {
 
     const { username, password } = this.state;
 
-    api.post('/signin', { username, password })
+    const history = this.props.history;
+
+    api.post('/login', { username, password })
     .then(response => {
-      localStorage.setItem('token', response.data.data.token);
+      const token = response.data.data.token;
+      localStorage.setItem('token', token);
+      history('/', { replace: true })
     })
     .catch(() => {
         //TODO: handle the error when implemented
@@ -89,9 +101,9 @@ export default class Signin extends React.Component {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Регистрация
+              Вход
             </Typography>
-            <Box component="form" noValidate onSubmit={e => this.onSubmit(e)} sx={{ width: 310 }}>
+            <Box component="form" noValidate onSubmit={e => this.onSubmit(e)} sx={{ width: 300 }}>
               <TextField
                 margin="normal"
                 required
@@ -124,7 +136,7 @@ export default class Signin extends React.Component {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Зарегистрироваться
+                Войти
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -133,8 +145,8 @@ export default class Signin extends React.Component {
                   </Link> */}
                 </Grid>
                 <Grid item>
-                  <Link href="/login" variant="body2">
-                    Вход
+                  <Link href="/signin" variant="body2">
+                    Регистрация
                   </Link>
                 </Grid>
               </Grid>
@@ -146,3 +158,5 @@ export default class Signin extends React.Component {
     );
   }
 }
+
+export default WrappLogin;

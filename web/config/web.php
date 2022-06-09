@@ -74,8 +74,8 @@ $config = [
                 'POST login' => 'v1/user/login',
                 'OPTIONS login' => 'v1/user/options',
 
-                'GET list' => 'v1/list/item',
-                'OPTIONS list' => 'v1/list/options',
+                'GET users' => 'v1/users/list',
+                'OPTIONS users' => 'v1/users/options',
             ]
         ],
       

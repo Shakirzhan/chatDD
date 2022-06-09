@@ -19,7 +19,13 @@ export default class Home extends React.Component {
     }
 
     send() {
-        api.get('/list')
+        const token = window.localStorage.getItem('token');
+
+        api.get('/users', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(() => {
         })
         .catch(() => {

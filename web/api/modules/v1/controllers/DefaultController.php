@@ -21,8 +21,6 @@ class DefaultController extends Controller
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['except'] = ['options'];
-
         return array_merge($behaviors, [
             'contentNegotiator' => [
                 'class' => ContentNegotiator::class,
