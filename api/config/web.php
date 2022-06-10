@@ -13,7 +13,7 @@ $config = [
     ],
     'modules' => [
         'v1' => [
-            'basePath' => '@app/api/modules/v1',
+            'basePath' => '@app/modules/v1',
             'class' => 'app\modules\v1\Module'
         ]
     ],
