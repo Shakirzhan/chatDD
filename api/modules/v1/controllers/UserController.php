@@ -1,8 +1,8 @@
 <?php
-namespace app\api\modules\v1\controllers;
+namespace app\modules\v1\controllers;
 
-use app\api\modules\v1\models\User;
-use app\api\modules\v1\models\Status;
+use app\modules\v1\models\User;
+use app\modules\v1\models\Status;
 use yii\filters\AccessControl;
 use Yii;
  

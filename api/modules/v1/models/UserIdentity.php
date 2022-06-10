@@ -1,5 +1,5 @@
 <?php
-namespace app\api\modules\v1\models;
+namespace app\modules\v1\models;
 
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;

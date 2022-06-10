@@ -1,9 +1,7 @@
 <?php
-namespace app\api\modules\v1\controllers;
+namespace app\modules\v1\controllers;
 
-use app\api\modules\v1\models\User;
-
-class UsersController extends DefaultController
+class ListController extends DefaultController
 {
     public function behaviors()
     {
@@ -14,8 +12,9 @@ class UsersController extends DefaultController
         return $behaviors;
     }
     // We are using the regular web app modules:
-    public function actionList()
+    public function actionItem()
     {
-        return User::find()->all();
+        return [];  
     }
+
 }

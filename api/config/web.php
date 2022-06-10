@@ -14,7 +14,7 @@ $config = [
     'modules' => [
         'v1' => [
             'basePath' => '@app/api/modules/v1',
-            'class' => 'app\api\modules\v1\Module'
+            'class' => 'app\modules\v1\Module'
         ]
     ],
     'components' => [
@@ -35,7 +35,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\api\modules\v1\models\User',
+            'identityClass' => 'app\modules\v1\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
             'loginUrl' => null,

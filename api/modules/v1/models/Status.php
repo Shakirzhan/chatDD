@@ -1,5 +1,5 @@
 <?php
-namespace app\api\modules\v1\models;
+namespace app\modules\v1\models;
 // Created By @hoaaah * Copyright (c) 2020 belajararief.com
 
 class Status {
