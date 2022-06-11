@@ -4,6 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import { useParams } from "react-router-dom";
 import styles from './styles';
 
+import api from '../api';
+
 const WrappMessage = () => {
     const params = useParams()
   
@@ -13,12 +15,49 @@ const WrappMessage = () => {
 class Message extends React.Component {
     constructor(props) {
         super(props);
-      }
+
+        this.state = {
+            message: '',
+            messages: []
+        }
+    }
+
+    componentDidMount() {
+        const { user_id: get_user_id } = this.props.params;
+
+        api.get('/messages/'+get_user_id)
+        .then(response => {
+            const messages = response.data
+            this.setState({ messages })
+        })
+        .catch(() => {
+         
+        })
+    }
+
+    onChange(e) {
+        this.setState({ [e.target.name]: e.target.value })
+    }
+
+    onSend(e) {
+        e.preventDefault();
+
+        const { user_id: get_user_id } = this.props.params;
+        const message = this.state.message;
+
+        api.post('/send', { get_user_id, message })
+        .then(() => {
+            this.setState({ message: '' })
+        })
+        .catch(() => {
+         
+        })
+    }
 
     render() {
-        const params = this.props.params;
+        const { user_id: get_user_id } = this.props.params;
 
-        console.log(params)
+        const { messages, message } = this.state
 
         return (
             <div className='chat' style={styles.chat}>
@@ -29,25 +68,40 @@ class Message extends React.Component {
                     <div style={styles.both}></div>
                 </header>
                 <div className='body' style={styles.chatBody}>
-           
-                    <div className="wrap">
-                        <div className="incoming" style={styles.incoming}>
-                            <div className="bubble" style={styles.Ibubble}>1111</div>
-                        </div>
-                        <div style={styles.both}></div>
-                        <div className="outgoing" style={styles.outgoing}>
-                            <div className="bubble" style={styles.Obubble}>222</div>
-                        </div>
-                        <div style={styles.both}></div>
-                    </div>
+                    {messages.map(message => <div className="wrap" key={message.id}>
+                        {message.send_user_id == get_user_id && <>
+                            <div className="incoming" style={styles.incoming}>
+                                <div className="bubble" style={styles.Ibubble}>{message.message}</div>
+                            </div>
+                            <div style={styles.both}></div>
+                        </>}
+                         
+                         {message.send_user_id != get_user_id && <>
+                            <div className="outgoing" style={styles.outgoing}>
+                                <div className="bubble" style={styles.Obubble}>{message.message}</div>
+                            </div>
+                            <div style={styles.both}></div>
+                         </>}
+                        
+                     </div>)}
+                   
 
                 </div>
                 <div style={styles.footer}>
-                    <input type='text' style={styles.message} placeholder="Сообщение..." />
+                    <form onSubmit={e => this.onSend(e)}>
+                    <input 
+                        type='text' 
+                        style={styles.message}  
+                        name="message" 
+                        onChange={e => this.onChange(e)} 
+                        value={message}
+                        placeholder="Сообщение..." 
+                    />
                     
-                    <IconButton style={styles.button} size="small">
+                    <IconButton onClick={e => this.onSend(e)} button="submit" style={styles.button} size="small">
                         <SendIcon fontSize="inherit" />
                     </IconButton>
+                    </form>
                 </div>
                 
             </div>

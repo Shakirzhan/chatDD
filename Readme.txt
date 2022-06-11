@@ -12,6 +12,8 @@ docker exec -it docker_app_1 bash
 
 php /var/www/app/yii migrate
 
+php yii migrate/create create_messages_table
+
 
 routes
 

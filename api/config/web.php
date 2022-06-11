@@ -74,6 +74,12 @@ $config = [
                 'POST login' => 'v1/user/login',
                 'OPTIONS login' => 'v1/user/options',
 
+                'POST send' => 'v1/message/send',
+                'OPTIONS send' => 'v1/message/options',
+
+                'GET messages/<user_id>' => 'v1/message/messages',
+                'OPTIONS messages/<user_id>' => 'v1/message/options',
+
                 'GET users' => 'v1/users/list',
                 'OPTIONS users' => 'v1/users/options',
             ]
