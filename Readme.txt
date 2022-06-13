@@ -8,7 +8,7 @@ sudo chmod 777 /var/www/html/web/assets
 
 composer install --ignore-platform-reqs
 
-docker exec -it docker_app_1 bash
+sudo docker exec -it chatdd_php_1 bash
 
 php /var/www/app/yii migrate
 
