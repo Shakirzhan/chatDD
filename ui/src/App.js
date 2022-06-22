@@ -2,8 +2,6 @@ import * as React from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Login from './login';
 import Signin from './signin';
-import Message from './message';
-import Home from './home';
 
 const PAGE_HOME = '/';
 const PAGE_LOGIN = '/login';
@@ -51,8 +49,7 @@ class App extends React.Component {
     return (
       <>
         <Routes>
-          <Route path="/" element={<Home />} /> 
-          <Route path="/message/:user_id" element={<Message />} /> 
+          <Route path="/" element={<div>Home</div>} /> 
           <Route path="/login" element={<Login />} /> 
           <Route path="/signin" element={<Signin />} /> 
         </Routes>

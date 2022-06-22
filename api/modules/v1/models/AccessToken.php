@@ -4,7 +4,6 @@ namespace app\modules\v1\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use Yii;
 
 /**
  * AccessToken Class for access_token table.
@@ -12,7 +11,7 @@ use Yii;
  * UserIdentity class will find any token that active at current date and give Authorization based on access_token status
  * 
  * @property integer $id
- * @property string  $user_id
+ * @property integer  $user_id
  * @property string  $consumer
  * @property string  $token
  * @property string  $access_given
@@ -23,9 +22,7 @@ use Yii;
  * @property string  $tokenExpiration
  * @property string  $defaultAccessGiven
  * @property integer $defaultConsumern
- * 
- * @method generateAuthKey($user)
- * @method makeAllUserTokenExpiredByUserId($userId)
+ *
  * 
  * @author Heru Arief Wijaya @2020
  * 
@@ -50,11 +47,9 @@ class AccessToken extends ActiveRecord
      * Generate new access_token that will be used at Authorization
      * 
      * @param object $user the User Object (User::findOne($id))
-     * @return nothing
      */
     public static function generateAuthKey($user)
     {
-        // $this->auth_key = Yii::$app->security->generateRandomString();
         $accessToken = new AccessToken();
         $accessToken->user_id = $user->id;
         $accessToken->consumer = $user->consumer ?? $accessToken->defaultConsumer;
@@ -69,7 +64,6 @@ class AccessToken extends ActiveRecord
      * Make all user token based on any user_id expired
      * 
      * @param int @userId
-     * @return nothing
      */
     public static function makeAllUserTokenExpiredByUserId($userId){
         AccessToken::updateAll(['expire_at' => strtotime("now")], ['user_id' => $userId]);

@@ -18,7 +18,6 @@ $config = [
         ]
     ],
     'components' => [
-        
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '21DE1E4304346210B83B5885972F7396', //.env
@@ -70,16 +69,12 @@ $config = [
             //'suffix' => '.html',
             'rules' => [
                 'POST signup' => 'v1/user/signup',
-
                 'POST login' => 'v1/user/login',
                 'OPTIONS login' => 'v1/user/options',
-
                 'POST send' => 'v1/message/send',
                 'OPTIONS send' => 'v1/message/options',
-
                 'GET messages/<user_id>' => 'v1/message/messages',
                 'OPTIONS messages/<user_id>' => 'v1/message/options',
-
                 'GET users' => 'v1/users/list',
                 'OPTIONS users' => 'v1/users/options',
             ]

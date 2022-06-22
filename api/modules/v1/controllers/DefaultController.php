@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\v1\controllers;
  
 use yii\web\Controller;
@@ -28,22 +29,17 @@ class DefaultController extends Controller
                     'application/json' => Response::FORMAT_JSON,
                     'application/xml' => Response::FORMAT_XML,
                 ],
-
                 'languages' => [
                     'en-US',
                     'de',
                 ],
             ],
-
             'authenticator' => [
                 'class' => HttpBearerAuth::className(),
             ],
-
-            // For cross-domain AJAX request
             'corsFilter'  => [
                 'class' => \yii\filters\Cors::className(),
                 'cors'  => [
-                    // restrict access to domains:
                     'Origin' => ['*'],
                     'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                     'Access-Control-Request-Headers' => ['*'],
@@ -53,7 +49,6 @@ class DefaultController extends Controller
                     'Access-Control-Expose-Headers' => []
                 ],
             ],
-
         ]);
     }
 }
