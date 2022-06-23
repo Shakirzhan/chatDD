@@ -8,6 +8,13 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
+/**
+ * User Class for access_token table.
+ * @property string $consumer
+ * @property string $access_given
+ * @property string $username
+ * @property string $auth_key
+ */
 class User extends ActiveRecord implements IdentityInterface
 {
 

@@ -51,9 +51,7 @@ class Login extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-
     const { username, password } = this.state;
-
     const history = this.props.history;
 
     api.post('/login', { username, password })

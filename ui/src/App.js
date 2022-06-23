@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
-import Login from './login';
-import Signin from './signin';
+import Home from "./home";
+import Login from "./login";
+import Signin from "./signin";
 
 const PAGE_HOME = '/';
 const PAGE_LOGIN = '/login';
@@ -49,7 +50,7 @@ class App extends React.Component {
     return (
       <>
         <Routes>
-          <Route path="/" element={<div>Home</div>} /> 
+          <Route path="/" element={<Home />} /> 
           <Route path="/login" element={<Login />} /> 
           <Route path="/signin" element={<Signin />} /> 
         </Routes>
