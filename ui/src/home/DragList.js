@@ -70,6 +70,8 @@ function DragList() {
   const [display, setDsiplay] = React.useState(CLOSE_MODAL);
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [titleError, setTitleError] = React.useState(false);
+  const [descriptionError, setDescriptionError] = React.useState(false);
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -93,6 +95,13 @@ function DragList() {
   };
 
   const add = () => {
+    if(!title || !description) {
+      setTitleError(!title);
+      setDescriptionError(!description);
+
+      return;
+    }
+
     setDsiplay(CLOSE_MODAL);
     elementsLists = elements
     elementsLists.todo.push({
@@ -125,8 +134,10 @@ function DragList() {
                   type="text" 
                   label="Заголовок" 
                   variant="outlined" 
+                  helperText={titleError && "Поле Заголовок обязательное для заполнения!"}
                   onChange={(e) => setTitle(e.target.value)} 
                   value={title} 
+                  error={titleError}
                   fullWidth
                 />
               </Grid>
@@ -135,8 +146,10 @@ function DragList() {
                   type="text" 
                   label="Описание" 
                   variant="outlined" 
+                  helperText={descriptionError && "Поле Описание обязательное для заполнения!"}
                   onChange={(e) => setDescription(e.target.value)} 
                   value={description}  
+                  error={descriptionError}
                   fullWidth
                 />
               </Grid>
