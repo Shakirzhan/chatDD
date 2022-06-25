@@ -6,6 +6,7 @@ import styled from "styled-components";
 const ColumnHeader = styled.div`
   text-transform: uppercase;
   margin-bottom: 20px;
+  position: relative;
 `;
 
 const DroppableStyles = styled.div`
@@ -29,9 +30,18 @@ const Wrap = styled.div`
   }
 `;
 
-const DraggableElement = ({ prefix, elements }) => (
+const FlyButton = styled.div`
+  position: absolute;
+  top: -5px;
+  right: 0;
+`;
+
+const DraggableElement = ({ prefix, elements, children }) => (
   <DroppableStyles>
-    <ColumnHeader>{names[prefix]}</ColumnHeader>
+    <ColumnHeader>
+      {names[prefix]} 
+      <FlyButton>{children}</FlyButton>
+    </ColumnHeader>
     <Wrap>
       <Droppable droppableId={`${prefix}`}>
         {(provided) => (
