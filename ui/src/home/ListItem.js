@@ -26,10 +26,10 @@ const ListItem = ({ item, index }) => {
             <Card sx={{ minWidth: 275 }}>
               <CardContent>
                 <Typography variant="h5" component="div">
-                  Заголовок
+                  {item.title}
                 </Typography>
                 <Typography variant="body2">
-                  Описание
+                  {item.description}
                 </Typography>
               </CardContent>
             </Card>
