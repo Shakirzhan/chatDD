@@ -109,9 +109,17 @@ function DragList() {
       title,
       description
     })
-    setTitle('')
-    setDescription('')
+    setTitle('');
+    setDescription('');
     setElements(elementsLists);
+  }
+
+  const cancel = () => {
+    setTitleError(false);
+    setDescriptionError(false);
+    setTitle('');
+    setDescription('');
+    setDsiplay(CLOSE_MODAL);
   }
 
   return (
@@ -157,8 +165,8 @@ function DragList() {
           </WrapModal>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDsiplay(CLOSE_MODAL)}>Закрыть</Button>
-          <Button onClick={() => add()} autoFocus>
+          <Button onClick={cancel}>Отмена</Button>
+          <Button onClick={add} autoFocus>
             Добавить
           </Button>
         </DialogActions>
