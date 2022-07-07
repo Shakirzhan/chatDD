@@ -1,5 +1,6 @@
 import { Draggable } from "react-beautiful-dnd";
 import React from "react";
+import { connect } from 'react-redux';
 import styled from "styled-components";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import WrapDialog from "../components/WrapDialog";
+import TaskForm from "../components/TaskForm";
+import { setInput, reset, change } from "../redux/actions";
 
 const DragItem = styled.div`
   margin: 0 0 8px 0;
@@ -18,7 +21,7 @@ const DragItem = styled.div`
   flex-direction: column;
 `;
 
-const ListItem = ({ item, index, deleteItem }) => {
+const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { title, description } }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClose = () => {
@@ -28,6 +31,18 @@ const ListItem = ({ item, index, deleteItem }) => {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const setData = (openDialog = () => {}) => () => {
+    set({ name: 'title', value: item.title });
+    set({ name: 'description', value: item.description });
+    openDialog();
+    handleClose();
+  };
+
+  const change = (onClose = () => {}) => () => {
+    onChange({ title, description, index });
+    onClose();
+  }
 
   return (
     <>
@@ -69,7 +84,19 @@ const ListItem = ({ item, index, deleteItem }) => {
                       open={Boolean(anchorEl)}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={handleClose}>Редактировать</MenuItem>
+                      <WrapDialog 
+                        title="Редактировать элемент"
+                        actions={(onClose = () => {}) => (<>
+                          <Button onClick={change(onClose)} autoFocus>
+                            Изменить
+                          </Button>
+                        </>)}
+                        reset={resetData}
+                        buttons={(openDialog = () => {}) => <MenuItem onClick={setData(openDialog)}>Редактировать</MenuItem>}
+                      >
+                        <TaskForm />
+                      </WrapDialog>
+
                       <WrapDialog 
                         title="Удалить элемент"
                         actions={(onClose = () => {}) => (<>
@@ -99,4 +126,18 @@ const ListItem = ({ item, index, deleteItem }) => {
   );
 };
 
-export default ListItem;
+const mapStateToProps = (state) => ({
+  form: state.todos.form
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  set: (data = {}) => dispatch(setInput(data)),
+  resetData: () => dispatch(reset()),
+  onChange: (data = {}) => dispatch(change(data))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListItem)
+

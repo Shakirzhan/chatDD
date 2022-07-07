@@ -23,6 +23,13 @@ export const setInput = ({ name, value }) => ({
     value
 })
 
+export const change = ({ title, description, index }) => ({
+    type: types.CHANGE,
+    title, 
+    description, 
+    index
+})
+
 export const reset = () => ({
     type: types.RESET
 })
