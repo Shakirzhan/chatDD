@@ -39,7 +39,7 @@ const FlyButton = styled.div`
 const DraggableElement = ({ prefix, elements, children, deleteItem }) => (
   <DroppableStyles>
     <ColumnHeader>
-      {names[prefix]} 
+      {names[prefix]} ({elements.length})
       <FlyButton>{children}</FlyButton>
     </ColumnHeader>
     <Wrap>
