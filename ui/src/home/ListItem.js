@@ -42,6 +42,7 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
   const change = (onClose = () => {}) => () => {
     onChange({ title, description, index });
     onClose();
+    resetData();
   }
 
   return (
@@ -104,7 +105,10 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
                             Удалить
                           </Button>
                       </>)}
-                        buttons={(openDialog = () => {}) => <MenuItem onClick={openDialog}>Удалить</MenuItem>}
+                        buttons={(openDialog = () => {}) => <MenuItem onClick={() => {
+                          openDialog();
+                          handleClose();
+                        }}>Удалить</MenuItem>}
                       >
                           <Typography variant="body2">
                             Вы уверены, что хотите удалить "{item.title}"?
