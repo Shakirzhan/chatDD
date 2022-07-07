@@ -72,16 +72,12 @@ const ListItem = ({ item, index, deleteItem }) => {
                       <MenuItem onClick={handleClose}>Редактировать</MenuItem>
                       <WrapDialog 
                         title="Удалить элемент"
-                        actions={(onClose = () => {}) => {
-                          return (<>
-                              <Button onClick={deleteItem(onClose, index)} autoFocus>
-                                Удалить
-                              </Button>
-                          </>)
-                        }}
-                        buttons={(openDialog = () => {}) => {
-                          return <MenuItem onClick={openDialog}>Удалить</MenuItem>
-                        }}
+                        actions={(onClose = () => {}) => (<>
+                          <Button onClick={deleteItem(onClose, index)} autoFocus>
+                            Удалить
+                          </Button>
+                      </>)}
+                        buttons={(openDialog = () => {}) => <MenuItem onClick={openDialog}>Удалить</MenuItem>}
                       >
                           <Typography variant="body2">
                             Вы уверены, что хотите удалить "{item.title}"?

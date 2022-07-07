@@ -4,8 +4,10 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import styled from "styled-components";
 import { DragDropContext } from "react-beautiful-dnd";
+import { connect } from 'react-redux'
 import DraggableElement from "./DraggableElement";
 import WrapDialog from "../components/WrapDialog";
+import { addItem, deleteItem, setTodos } from "../redux/actions";
 
 const DragDropContextContainer = styled.div`
   height: 100%;
@@ -55,13 +57,7 @@ const addToList = (list, index, element) => {
 
 const lists = ["todo", "inProgress", "done"];
 
-function DragList() {
-  let elementsLists = {
-    todo: [],
-    inProgress: [],
-    done: []
-  }
-  const [elements, setElements] = React.useState(elementsLists);
+function DragList({ elements, add, del, set }) {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [titleError, setTitleError] = React.useState(false);
@@ -84,11 +80,10 @@ function DragList() {
       result.destination.index,
       removedElement
     );
-    
-    setElements(listCopy);
+    set(listCopy);
   };
 
-  const add = (onClose = () => {}) => () => {
+  const addAction = (onClose = () => {}) => () => {
     if(!title || !description) {
       setTitleError(!title);
       setDescriptionError(!description);
@@ -96,9 +91,8 @@ function DragList() {
       return;
     }
 
-    onClose();
-    elementsLists = elements
-    elementsLists.todo.push({
+    onClose(); 
+    add({
       id: Math.random().toString(),
       title,
       description
@@ -107,13 +101,10 @@ function DragList() {
     setDescription('');
     setTitleError(false);
     setDescriptionError(false);
-    setElements(elementsLists);
   }
 
-  const deleteItem = (onClose = () => {}, index = null) => () => {
-    const listCopy = { ...elements };
-    listCopy.todo = listCopy.todo.filter((_todoItem, itemIndex) => itemIndex != index)
-    setElements(listCopy);
+  const deleteAction = (onClose = () => {}, index = null) => () => {
+    del(index);
     onClose();
   }
 
@@ -135,24 +126,21 @@ function DragList() {
                 elements={elements[listKey]}
                 key={listKey}
                 prefix={listKey}
-                deleteItem={deleteItem}
+                deleteItem={deleteAction}
               >
                 {listKey === lists[0] && <WrapDialog 
                   nameButton="Добавить" 
                   title="Добавить елемент"
-                  actions={(onClose = () => {}) => {
-                    return (<>
-                      <Button onClick={cancel(onClose)}>Отмена</Button>
-                      <Button onClick={add(onClose)} autoFocus>
-                        Добавить
-                      </Button>
-                    </>)
-                  }}
-                  buttons={(openDialog = () => {}) => {
-                    return (
-                      <Button onClick={openDialog}>Добавить</Button>
-                    )
-                  }}
+                  actions={(onClose = () => {}) => (<>
+                    <Button onClick={cancel(onClose)}>Отмена</Button>
+                    <Button onClick={addAction(onClose)} autoFocus>
+                      Добавить
+                    </Button>
+                  </>)}
+                  reset={cancel()}
+                  buttons={(openDialog = () => {}) => (
+                    <Button onClick={openDialog}>Добавить</Button>
+                  )}
                 >
                   <WrapModal>
                     <Grid container spacing={2}>
@@ -192,4 +180,18 @@ function DragList() {
   );
 }
 
-export default DragList;
+const mapStateToProps = (state) => ({
+  elements: state.todos.elementsLists
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  add: (item = {}) => dispatch(addItem(item)),
+  del: (index = null) => dispatch(deleteItem(index)),
+  set: (todos = {}) => dispatch(setTodos(todos))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DragList)
+

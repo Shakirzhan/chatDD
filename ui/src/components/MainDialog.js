@@ -4,12 +4,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const MainDialog = ({ title = '', actions = () => {}, children, display = false, onClose = () => {} }) => {
+const MainDialog = ({ title = '', actions = () => {}, children, display = false, onClose = () => {}, reset = () => {} }) => {
     return (
         <Dialog
             sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
             open={display}
-            onClose={onClose}
+            onClose={() => {
+                onClose();
+                reset();
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
