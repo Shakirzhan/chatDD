@@ -3,7 +3,9 @@ import types from "../types"
 const initialState = {
   form: {
     title: '',
-    description: ''
+    description: '',
+    titleError: false,
+    descriptionError: false,
   },
   elementsLists: {
     todo: [],
@@ -41,6 +43,19 @@ export default function(state = initialState, action) {
       return {
         ...state,
         elementsLists: action.elementsLists
+      }
+    case types.SET_INPUT:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          [action.name]: action.value
+        }
+      }
+    case types.RESET: 
+      return {
+        ...state,
+        form: initialState.form
       }
     default:
       return state;

@@ -16,3 +16,13 @@ export const setTodos = (elementsLists) => ({
     type: types.SET_TODOS,
     elementsLists
 })
+
+export const setInput = ({ name, value }) => ({
+    type: types.SET_INPUT,
+    name,
+    value
+})
+
+export const reset = () => ({
+    type: types.RESET
+})

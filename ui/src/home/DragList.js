@@ -1,13 +1,12 @@
 import React from "react";
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
 import styled from "styled-components";
 import { DragDropContext } from "react-beautiful-dnd";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import DraggableElement from "./DraggableElement";
 import WrapDialog from "../components/WrapDialog";
-import { addItem, deleteItem, setTodos } from "../redux/actions";
+import TaskForm from "../components/TaskForm";
+import { addItem, deleteItem, setTodos, setInput, reset } from "../redux/actions";
 
 const DragDropContextContainer = styled.div`
   height: 100%;
@@ -39,10 +38,6 @@ const Wrap = styled.div`
   box-sizing: border-box;
 `;
 
-const WrapModal = styled.div`
-  padding-top: 16px;
-`;
-
 const removeFromList = (list, index) => {
   const result = Array.from(list);
   const [removed] = result.splice(index, 1);
@@ -57,11 +52,7 @@ const addToList = (list, index, element) => {
 
 const lists = ["todo", "inProgress", "done"];
 
-function DragList({ elements, add, del, set }) {
-  const [title, setTitle] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const [titleError, setTitleError] = React.useState(false);
-  const [descriptionError, setDescriptionError] = React.useState(false);
+function DragList({ elements, add, del, set, setData, resetData, form: { title, description } }) {
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -85,8 +76,8 @@ function DragList({ elements, add, del, set }) {
 
   const addAction = (onClose = () => {}) => () => {
     if(!title || !description) {
-      setTitleError(!title);
-      setDescriptionError(!description);
+      setData({ name: 'titleError', value: !title });
+      setData({ name: 'descriptionError', value: !description });
 
       return;
     }
@@ -97,10 +88,7 @@ function DragList({ elements, add, del, set }) {
       title,
       description
     })
-    setTitle('');
-    setDescription('');
-    setTitleError(false);
-    setDescriptionError(false);
+    resetData();
   }
 
   const deleteAction = (onClose = () => {}, index = null) => () => {
@@ -109,10 +97,7 @@ function DragList({ elements, add, del, set }) {
   }
 
   const cancel = (onClose = () => {}) => () => {
-    setTitleError(false);
-    setDescriptionError(false);
-    setTitle('');
-    setDescription('');
+    resetData();
     onClose();
   }
 
@@ -142,34 +127,7 @@ function DragList({ elements, add, del, set }) {
                     <Button onClick={openDialog}>Добавить</Button>
                   )}
                 >
-                  <WrapModal>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField 
-                          type="text" 
-                          label="Заголовок" 
-                          variant="outlined" 
-                          helperText={titleError && "Поле Заголовок обязательное для заполнения!"}
-                          onChange={(e) => setTitle(e.target.value)} 
-                          value={title} 
-                          error={titleError}
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField 
-                          type="text" 
-                          label="Описание" 
-                          variant="outlined" 
-                          helperText={descriptionError && "Поле Описание обязательное для заполнения!"}
-                          onChange={(e) => setDescription(e.target.value)} 
-                          value={description}  
-                          error={descriptionError}
-                          fullWidth
-                        />
-                      </Grid>
-                    </Grid>
-                  </WrapModal>
+                  <TaskForm />
                 </WrapDialog>}
               </DraggableElement>
             ))}
@@ -181,13 +139,16 @@ function DragList({ elements, add, del, set }) {
 }
 
 const mapStateToProps = (state) => ({
-  elements: state.todos.elementsLists
+  elements: state.todos.elementsLists,
+  form: state.todos.form
 })
 
 const mapDispatchToProps = (dispatch) => ({
   add: (item = {}) => dispatch(addItem(item)),
   del: (index = null) => dispatch(deleteItem(index)),
-  set: (todos = {}) => dispatch(setTodos(todos))
+  set: (todos = {}) => dispatch(setTodos(todos)),
+  setData: (data = {}) => dispatch(setInput(data)),
+  resetData: () => dispatch(reset())
 })
 
 export default connect(
