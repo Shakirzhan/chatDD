@@ -90,7 +90,7 @@ function DragList() {
       result.destination.index,
       removedElement
     );
-
+    
     setElements(listCopy);
   };
 
@@ -111,7 +111,15 @@ function DragList() {
     })
     setTitle('');
     setDescription('');
+    setTitleError(false);
+    setDescriptionError(false);
     setElements(elementsLists);
+  }
+
+  const deleteItem = (index) => {
+    const listCopy = { ...elements };
+    listCopy.todo = listCopy.todo.filter((_todoItem, itemIndex) => itemIndex != index)
+    setElements(listCopy);
   }
 
   const cancel = () => {
@@ -179,6 +187,7 @@ function DragList() {
                 elements={elements[listKey]}
                 key={listKey}
                 prefix={listKey}
+                deleteItem={deleteItem}
               >
                 {listKey === lists[0] && <Button onClick={() => setDsiplay(OPEN_MODAL)}>Добавить</Button>}
               </DraggableElement>

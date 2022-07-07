@@ -36,7 +36,7 @@ const FlyButton = styled.div`
   right: 0;
 `;
 
-const DraggableElement = ({ prefix, elements, children }) => (
+const DraggableElement = ({ prefix, elements, children, deleteItem }) => (
   <DroppableStyles>
     <ColumnHeader>
       {names[prefix]} 
@@ -47,7 +47,12 @@ const DraggableElement = ({ prefix, elements, children }) => (
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {elements.map((item, index) => (
-              <ListItem key={item.id} item={item} index={index} />
+              <ListItem 
+                key={item.id} 
+                item={item} 
+                index={index} 
+                deleteItem={deleteItem} 
+              />
             ))}
             {provided.placeholder}
           </div>
