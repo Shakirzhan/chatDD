@@ -1,14 +1,11 @@
 import React from "react";
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import styled from "styled-components";
 import { DragDropContext } from "react-beautiful-dnd";
 import DraggableElement from "./DraggableElement";
+import WrapDialog from "../components/WrapDialog";
 
 const DragDropContextContainer = styled.div`
   height: 100%;
@@ -64,10 +61,7 @@ function DragList() {
     inProgress: [],
     done: []
   }
-  const OPEN_MODAL = true;
-  const CLOSE_MODAL = false;
   const [elements, setElements] = React.useState(elementsLists);
-  const [display, setDsiplay] = React.useState(CLOSE_MODAL);
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [titleError, setTitleError] = React.useState(false);
@@ -94,7 +88,7 @@ function DragList() {
     setElements(listCopy);
   };
 
-  const add = () => {
+  const add = (onClose = () => {}) => () => {
     if(!title || !description) {
       setTitleError(!title);
       setDescriptionError(!description);
@@ -102,7 +96,7 @@ function DragList() {
       return;
     }
 
-    setDsiplay(CLOSE_MODAL);
+    onClose();
     elementsLists = elements
     elementsLists.todo.push({
       id: Math.random().toString(),
@@ -116,69 +110,23 @@ function DragList() {
     setElements(elementsLists);
   }
 
-  const deleteItem = (index) => {
+  const deleteItem = (onClose = () => {}, index = null) => () => {
     const listCopy = { ...elements };
     listCopy.todo = listCopy.todo.filter((_todoItem, itemIndex) => itemIndex != index)
     setElements(listCopy);
+    onClose();
   }
 
-  const cancel = () => {
+  const cancel = (onClose = () => {}) => () => {
     setTitleError(false);
     setDescriptionError(false);
     setTitle('');
     setDescription('');
-    setDsiplay(CLOSE_MODAL);
+    onClose();
   }
 
   return (
     <Wrap>
-      <Dialog
-        sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
-        open={display}
-        onClose={() => setDsiplay(CLOSE_MODAL)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Добавить элемент
-        </DialogTitle>
-        <DialogContent>
-          <WrapModal>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField 
-                  type="text" 
-                  label="Заголовок" 
-                  variant="outlined" 
-                  helperText={titleError && "Поле Заголовок обязательное для заполнения!"}
-                  onChange={(e) => setTitle(e.target.value)} 
-                  value={title} 
-                  error={titleError}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField 
-                  type="text" 
-                  label="Описание" 
-                  variant="outlined" 
-                  helperText={descriptionError && "Поле Описание обязательное для заполнения!"}
-                  onChange={(e) => setDescription(e.target.value)} 
-                  value={description}  
-                  error={descriptionError}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </WrapModal>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancel}>Отмена</Button>
-          <Button onClick={add} autoFocus>
-            Добавить
-          </Button>
-        </DialogActions>
-      </Dialog>
       <DragDropContextContainer>
         <DragDropContext onDragEnd={onDragEnd}>
           <ListGrid>
@@ -189,7 +137,52 @@ function DragList() {
                 prefix={listKey}
                 deleteItem={deleteItem}
               >
-                {listKey === lists[0] && <Button onClick={() => setDsiplay(OPEN_MODAL)}>Добавить</Button>}
+                {listKey === lists[0] && <WrapDialog 
+                  nameButton="Добавить" 
+                  title="Добавить елемент"
+                  actions={(onClose = () => {}) => {
+                    return (<>
+                      <Button onClick={cancel(onClose)}>Отмена</Button>
+                      <Button onClick={add(onClose)} autoFocus>
+                        Добавить
+                      </Button>
+                    </>)
+                  }}
+                  buttons={(openDialog = () => {}) => {
+                    return (
+                      <Button onClick={openDialog}>Добавить</Button>
+                    )
+                  }}
+                >
+                  <WrapModal>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField 
+                          type="text" 
+                          label="Заголовок" 
+                          variant="outlined" 
+                          helperText={titleError && "Поле Заголовок обязательное для заполнения!"}
+                          onChange={(e) => setTitle(e.target.value)} 
+                          value={title} 
+                          error={titleError}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField 
+                          type="text" 
+                          label="Описание" 
+                          variant="outlined" 
+                          helperText={descriptionError && "Поле Описание обязательное для заполнения!"}
+                          onChange={(e) => setDescription(e.target.value)} 
+                          value={description}  
+                          error={descriptionError}
+                          fullWidth
+                        />
+                      </Grid>
+                    </Grid>
+                  </WrapModal>
+                </WrapDialog>}
               </DraggableElement>
             ))}
           </ListGrid>

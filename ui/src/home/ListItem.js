@@ -8,11 +8,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import WrapDialog from "../components/WrapDialog";
 
 const DragItem = styled.div`
   margin: 0 0 8px 0;
@@ -22,9 +19,6 @@ const DragItem = styled.div`
 `;
 
 const ListItem = ({ item, index, deleteItem }) => {
-  const OPEN_MODAL = true;
-  const CLOSE_MODAL = false;
-  const [display, setDsiplay] = React.useState(CLOSE_MODAL);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClose = () => {
@@ -35,37 +29,8 @@ const ListItem = ({ item, index, deleteItem }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleDelete = () => {
-    setDsiplay(OPEN_MODAL);
-    setAnchorEl(null);
-  };
-
   return (
     <>
-      <Dialog
-        sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
-        open={display}
-        onClose={() => setDsiplay(CLOSE_MODAL)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Удалить элемент
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Вы уверены, что хотите удалить "{item.title}"?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => {
-            deleteItem(index)
-            setDsiplay(CLOSE_MODAL)
-          }} autoFocus>
-            Удалить
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Draggable draggableId={item.id} index={index}>
         {(provided, snapshot) => {
           return (
@@ -105,7 +70,24 @@ const ListItem = ({ item, index, deleteItem }) => {
                       onClose={handleClose}
                     >
                       <MenuItem onClick={handleClose}>Редактировать</MenuItem>
-                      <MenuItem onClick={handleDelete}>Удалить</MenuItem>
+                      <WrapDialog 
+                        title="Удалить элемент"
+                        actions={(onClose = () => {}) => {
+                          return (<>
+                              <Button onClick={deleteItem(onClose, index)} autoFocus>
+                                Удалить
+                              </Button>
+                          </>)
+                        }}
+                        buttons={(openDialog = () => {}) => {
+                          return <MenuItem onClick={openDialog}>Удалить</MenuItem>
+                        }}
+                      >
+                          <Typography variant="body2">
+                            Вы уверены, что хотите удалить "{item.title}"?
+                          </Typography>
+                      </WrapDialog>
+                      
                     </Menu>
                   </Typography>
                   <Typography variant="body2">
