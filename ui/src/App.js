@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./home";
 import Login from "./login";
-import Signin from "./signin";
+import Signup from "./signup";
+import WrappHistory from "./components/WrappHistory";
 
 const PAGE_HOME = '/';
 const PAGE_LOGIN = '/login';
@@ -18,13 +19,6 @@ const CheckToken = props => {
   }
 
   return <></>;
-}
-
-const WrappApp = () => {
-  const history = useNavigate()
-  const location = useLocation()
-
-  return <App history={history} location={location} />
 }
 
 class App extends React.Component {
@@ -51,8 +45,8 @@ class App extends React.Component {
       <>
         <Routes>
           <Route path="/" element={<Home />} /> 
-          <Route path="/login" element={<Login />} /> 
-          <Route path="/signin" element={<Signin />} /> 
+          <Route path="/login" element={<WrappHistory Component={Login} />} /> 
+          <Route path="/signup" element={<WrappHistory Component={Signup} />} /> 
         </Routes>
         <CheckToken token={token} history={history} location={location} />
       </>
@@ -60,4 +54,4 @@ class App extends React.Component {
   }
 }
 
-export default WrappApp;
+export default App;

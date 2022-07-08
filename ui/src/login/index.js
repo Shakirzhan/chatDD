@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { useNavigate, useLocation } from "react-router-dom";
 import WrapForm from '../components/WrapForm';
 
 import api from '../api';
@@ -20,13 +19,6 @@ function Copyright(props) {
       {'.'}
     </Typography>
   );
-}
-
-const WrappLogin = () => {
-  const history = useNavigate()
-  const location = useLocation()
-
-  return <Login history={history} location={location} />
 }
 
 class Login extends React.Component {
@@ -110,7 +102,7 @@ class Login extends React.Component {
           <Grid item xs>
           </Grid>
           <Grid item>
-            <Link href="/signin" variant="body2">
+            <Link href="/signup" variant="body2">
               Регистрация
             </Link>
           </Grid>
@@ -121,4 +113,4 @@ class Login extends React.Component {
   }
 }
 
-export default WrappLogin;
+export default Login;

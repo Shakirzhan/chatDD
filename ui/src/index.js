@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from "react-router-dom";
 import store from "./redux/store";
 import App from "./App";
+import WrappHistory from "./components/WrappHistory";
 
 const theme = createTheme();
 
@@ -13,7 +14,7 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <React.StrictMode>
         <BrowserRouter>
-          <App />
+          <WrappHistory Component={App} />
         </BrowserRouter>
       </React.StrictMode>
     </ThemeProvider>
