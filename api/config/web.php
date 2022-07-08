@@ -54,7 +54,15 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['info'],
+                    'categories' => ['test_category'],
+                    'logFile' => '@app/runtime/logs/cron/success.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'categories' => ['test_category'],
+                    'logFile' => '@app/runtime/logs/cron/error.log',
                 ],
             ],
         ],
@@ -69,14 +77,9 @@ $config = [
             //'suffix' => '.html',
             'rules' => [
                 'POST signup' => 'v1/user/signup',
+                'OPTIONS signup' => 'v1/user/options',
                 'POST login' => 'v1/user/login',
                 'OPTIONS login' => 'v1/user/options',
-                'POST send' => 'v1/message/send',
-                'OPTIONS send' => 'v1/message/options',
-                'GET messages/<user_id>' => 'v1/message/messages',
-                'OPTIONS messages/<user_id>' => 'v1/message/options',
-                'GET users' => 'v1/users/list',
-                'OPTIONS users' => 'v1/users/options',
             ]
         ],
       

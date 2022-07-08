@@ -2,7 +2,8 @@
 
 namespace app\modules\v1\controllers;
 
-use app\modules\v1\models\User;
+use app\modules\v1\forms\LoginForm;
+use app\modules\v1\forms\SignupForm;
 use Yii;
  
 class UserController extends DefaultController
@@ -11,84 +12,34 @@ class UserController extends DefaultController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator']['except'] = ['options', 'login'];
+        $behaviors['authenticator']['except'] = ['options', 'login', 'signup'];
 
         return $behaviors;
     }
 
     public function actionLogin()
     {
+        $form = new LoginForm();
         $params = Yii::$app->request->post();
+        $form->load($params, '');
 
-        if(empty($params['username']) || empty($params['password'])) {
-            return [
-                'message' => "Нужен логин и пароль",
-                'data' => ''
-            ];
+        if($form->validate()) {
+            return $form->login();
         }
 
-        $user = User::findByUsername($params['username']);
-
-        if ($user->validatePassword($params['password'])) {
-            if(isset($params['consumer'])) {
-                $user->consumer = $params['consumer'];
-            }
-
-            if(isset($params['access_given'])) {
-                $user->access_given = $params['access_given'];
-            }
-
-            $user->generateAuthKey();
-            $user->save();
-
-            return [
-                'message' => 'Войти успешно, сохранить токен',
-                'data' => [
-                    'id' => $user->username,
-                    'token' => $user->auth_key,
-                    'email' => $user['email'],
-                ]
-            ];
-        }
-
-        return [
-            'message' => 'Имя пользователя и пароль не найдены. Проверить снова!',
-            'data' => ''
-        ];
+        return $form->errors;
     }
 
     public function actionSignup()
     {
-        $model = new User();
+        $form = new SignupForm();
         $params = Yii::$app->request->post();
+        $form->load($params, '');
 
-        if(!$params) {
-            return [
-                'message' => "Нужно имя пользователя, пароль и адрес электронной почты",
-                'data' => ''
-            ];
+        if($form->validate()) {
+            return $form->signup();
         }
 
-        $model->username = $params['username'];
-        $model->email = $params['email'];
-        $model->setPassword($params['password']);
-        $model->generateAuthKey();
-
-        if ($model->save()) {
-            return [
-                'message' => 'Вы стали участником',
-                'data' => User::findByUsername($model->username),
-            ];
-        }
-
-        $model->getErrors();
-
-        return [
-            'message' => 'Ошибка сохранения данных!',
-            'data' => [
-                'hasErrors' => $model->hasErrors(),
-                'getErrors' => $model->getErrors(),
-            ]
-        ];
+        return $form->errors;
     }
 }

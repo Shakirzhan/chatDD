@@ -12,9 +12,7 @@ use yii\db\ActiveRecord;
  * 
  * @property integer $id
  * @property integer  $user_id
- * @property string  $consumer
  * @property string  $token
- * @property string  $access_given
  * @property string  $used_at
  * @property string  $expire_at
  * @property integer $created_at
@@ -30,8 +28,6 @@ use yii\db\ActiveRecord;
 class AccessToken extends ActiveRecord
 {
     public $tokenExpiration = 60 * 24 * 365; // in seconds
-    public $defaultAccessGiven = '{"access":["all"]}';
-    public $defaultConsumer = 'mobile';
 
     /**
      * Declares the name of the database table associated with this AR class
@@ -52,8 +48,6 @@ class AccessToken extends ActiveRecord
     {
         $accessToken = new AccessToken();
         $accessToken->user_id = $user->id;
-        $accessToken->consumer = $user->consumer ?? $accessToken->defaultConsumer;
-        $accessToken->access_given = $user->access_given ?? $accessToken->defaultAccessGiven;
         $accessToken->token = $user->auth_key;
         $accessToken->used_at = strtotime("now");
         $accessToken->expire_at = $accessToken->tokenExpiration + $accessToken->used_at;
@@ -87,8 +81,6 @@ class AccessToken extends ActiveRecord
         return [
             [['user_id', 'used_at', 'expire_at', 'created_at', 'updated_at'], 'integer'],
             [['token'], 'required'],
-            [['access_given'], 'string'],
-            [['consumer'], 'string', 'max' => 255],
             [['token'], 'string', 'max' => 32],
             [['token'], 'unique'],
         ];
@@ -102,9 +94,7 @@ class AccessToken extends ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'consumer' => 'Consumer',
             'token' => 'Token',
-            'access_given' => 'Access Given',
             'used_at' => 'Used At',
             'expire_at' => 'Expire At',
             'created_at' => 'Created At',

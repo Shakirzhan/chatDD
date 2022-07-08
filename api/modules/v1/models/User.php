@@ -10,9 +10,10 @@ use yii\web\IdentityInterface;
 
 /**
  * User Class for access_token table.
- * @property string $consumer
- * @property string $access_given
  * @property string $username
+ * @property string $status
+ * @property string $email
+ * @property string $password_hash
  * @property string $auth_key
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -54,7 +55,6 @@ class User extends ActiveRecord implements IdentityInterface
              ['username', 'required'],
              ['username', 'string', 'min' => 2, 'max' => 255],        
              ['username', 'unique'],
-             [['consumer', 'access_given'], 'safe'],
              ['email', 'filter', 'filter' => 'trim'],
              ['email', 'required'],
              ['email', 'email'],
@@ -288,11 +288,6 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Validates password.
-     *
-     * @param  string $password
-     * @return bool
-     *
-     * @throws \yii\base\InvalidConfigException
      */
     public function validatePassword($password)
     {
@@ -301,11 +296,6 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates password hash from password and sets it to the model.
-     *
-     * @param  string $password
-     *
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
      */
     public function setPassword($password)
     {
