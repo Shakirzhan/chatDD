@@ -7,6 +7,7 @@ import DraggableElement from "./DraggableElement";
 import WrapDialog from "../components/WrapDialog";
 import TaskForm from "../components/TaskForm";
 import { addItem, deleteItem, setTodos, setInput, reset } from "../redux/actions";
+import api from '../api';
 
 const DragDropContextContainer = styled.div`
   height: 100%;
@@ -52,56 +53,87 @@ const addToList = (list, index, element) => {
 
 const lists = ["todo", "inProgress", "done"];
 
-function DragList({ elements, add, del, set, setData, resetData, form: { title, description } }) {
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const listCopy = { ...elements };
-    const sourceList = listCopy[result.source.droppableId];
-    const [removedElement, newSourceList] = removeFromList(
-      sourceList,
-      result.source.index
-    );
-    listCopy[result.source.droppableId] = newSourceList;
-    const destinationList = listCopy[result.destination.droppableId];
-    listCopy[result.destination.droppableId] = addToList(
-      destinationList,
-      result.destination.index,
-      removedElement
-    );
-    set(listCopy);
-  };
-
-  const addAction = (onClose = () => {}) => () => {
-    if(!title || !description) {
-      setData({ name: 'titleError', value: !title });
-      setData({ name: 'descriptionError', value: !description });
-
-      return;
-    }
-
-    onClose(); 
-    add({
-      id: Math.random().toString(),
-      title,
-      description
+class DragList extends React.Component {
+  componentDidMount() {
+    const { set } = this.props;
+    api.get('/list')
+    .then(response => {
+      const list = response.data;
+      const todo = list.filter(item => item.type == "todo").map(item => ({
+        ...item,
+        id: item.id.toString()
+      }))
+      const inProgress = list.filter(item => item.type == "inProgress")
+      const done = list.filter(item => item.type == "done")
+      const elementsLists = {
+        todo,
+        inProgress,
+        done
+      };
+      set(elementsLists)
     })
-    resetData();
+    .catch(() => {
+        //TODO: handle the error when implemented
+    })
   }
 
-  const deleteAction = (onClose = () => {}, index = null) => () => {
-    del(index);
-    onClose();
-  }
+  render() {
+    const { elements, add, del, set, setData, resetData, form: { title, description } } = this.props;
 
-  const cancel = (onClose = () => {}) => () => {
-    resetData();
-    onClose();
-  }
+    const onDragEnd = (result) => {
+      if (!result.destination) {
+        return;
+      }
+  
+      const listCopy = { ...elements };
+      const sourceList = listCopy[result.source.droppableId];
+      const [removedElement, newSourceList] = removeFromList(
+        sourceList,
+        result.source.index
+      );
+      listCopy[result.source.droppableId] = newSourceList;
+      const destinationList = listCopy[result.destination.droppableId];
+      listCopy[result.destination.droppableId] = addToList(
+        destinationList,
+        result.destination.index,
+        removedElement
+      );
+      set(listCopy);
+    };
+  
+    const addAction = (onClose = () => {}) => () => {
+      if(!title || !description) {
+        setData({ name: 'titleError', value: !title });
+        setData({ name: 'descriptionError', value: !description });
+  
+        return;
+      }
+  
+      onClose(); 
+      const type = "todo";
+      api.post('/create', { title, description, type })
+      .then(response => {
+        const item = response.data;
+        add(item)
+      })
+      .catch(() => {
+          //TODO: handle the error when implemented
+      })
+      
+      resetData();
+    }
+  
+    const deleteAction = (onClose = () => {}, index = null) => () => {
+      del(index);
+      onClose();
+    }
+  
+    const cancel = (onClose = () => {}) => () => {
+      resetData();
+      onClose();
+    }
 
-  return (
+    return (
     <Wrap>
       <DragDropContextContainer>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -135,7 +167,8 @@ function DragList({ elements, add, del, set, setData, resetData, form: { title, 
         </DragDropContext>
       </DragDropContextContainer>
     </Wrap>
-  );
+    )
+  }
 }
 
 const mapStateToProps = (state) => ({

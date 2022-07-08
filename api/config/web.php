@@ -80,6 +80,10 @@ $config = [
                 'OPTIONS signup' => 'v1/user/options',
                 'POST login' => 'v1/user/login',
                 'OPTIONS login' => 'v1/user/options',
+                'POST create' => 'v1/todos/create',
+                'OPTIONS create' => 'v1/todos/options',
+                'GET list' => 'v1/todos/list',
+                'OPTIONS list' => 'v1/todos/options',
             ]
         ],
       
