@@ -4,11 +4,12 @@ namespace app\modules\v1\controllers;
 
 use app\modules\v1\forms\LoginForm;
 use app\modules\v1\forms\SignupForm;
+use app\modules\v1\models\Statuses;
 use Yii;
  
 class UserController extends DefaultController
 {
-
+    
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -27,6 +28,8 @@ class UserController extends DefaultController
             return $form->login();
         }
 
+        Yii::$app->response->statusCode = Statuses::ERROR_500;
+
         return $form->errors;
     }
 
@@ -39,6 +42,8 @@ class UserController extends DefaultController
         if($form->validate()) {
             return $form->signup();
         }
+
+        Yii::$app->response->statusCode = Statuses::ERROR_500;
 
         return $form->errors;
     }

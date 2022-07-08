@@ -1,17 +1,11 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { useNavigate, useLocation } from "react-router-dom";
+import WrapForm from '../components/WrapForm';
 
 import api from '../api';
 
@@ -41,7 +35,9 @@ class Login extends React.Component {
     
     this.state = { 
       username: '',
-      password: ''  
+      password: '',
+      usernameError: false,
+      passwordError: false,  
     };
   }
 
@@ -53,10 +49,16 @@ class Login extends React.Component {
     e.preventDefault();
     const { username, password } = this.state;
     const history = this.props.history;
+    this.setState({ usernameError: !username });
+    this.setState({ passwordError: !password });
+
+    if(!username || !password) {
+      return;
+    }
 
     api.post('/login', { username, password })
     .then(response => {
-      const token = response.data.data.token;
+      const token = response.data.token;
       localStorage.setItem('token', token);
       history('/', { replace: true })
     })
@@ -66,93 +68,55 @@ class Login extends React.Component {
   }
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, usernameError, passwordError } = this.state;
 
     return (
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+      <WrapForm title="Вход" onSubmit={(e) => this.onSubmit(e)}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Логин"
+          name="username"
+          value={username}
+          onChange={e => this.onChange(e)}
+          autoFocus
+          error={usernameError}
+          helperText={usernameError && "Поле Описание обязательное для заполнения!"}
+          autoComplete="off"
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Вход
-            </Typography>
-            <Box component="form" noValidate onSubmit={e => this.onSubmit(e)} sx={{ width: 300 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Логин"
-                name="username"
-                value={username}
-                onChange={e => this.onChange(e)}
-                autoFocus
-                autoComplete="off"
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                value={password}
-                onChange={e => this.onChange(e)}
-                label="Пароль"
-                type="password"
-                autoComplete="current-password"
-              />
-              {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              /> */}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Войти
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  {/* <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link> */}
-                </Grid>
-                <Grid item>
-                  <Link href="/signin" variant="body2">
-                    Регистрация
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
-          </Box>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          value={password}
+          onChange={e => this.onChange(e)}
+          label="Пароль"
+          type="password"
+          error={passwordError}
+          helperText={passwordError && "Поле Описание обязательное для заполнения!"}
+          autoComplete="current-password"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Войти
+        </Button>
+        <Grid container>
+          <Grid item xs>
+          </Grid>
+          <Grid item>
+            <Link href="/signin" variant="body2">
+              Регистрация
+            </Link>
+          </Grid>
         </Grid>
-      </Grid>
+        <Copyright sx={{ mt: 5 }} />
+      </WrapForm>
     );
   }
 }
