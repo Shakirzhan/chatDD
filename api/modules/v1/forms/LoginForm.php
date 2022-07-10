@@ -29,6 +29,10 @@ class LoginForm extends Model
 
     public function login()
     {
+        if(!$this->validate()) {
+           return false;
+        }
+
         $user = User::findByUsername($this->username);
         $user->generateAuthKey();
 

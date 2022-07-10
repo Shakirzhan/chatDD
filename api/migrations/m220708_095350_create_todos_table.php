@@ -18,6 +18,7 @@ class m220708_095350_create_todos_table extends Migration
             'type' => $this->string(),
             'title' => $this->string(),
             'description' => $this->string(),
+            'index' => $this->integer(),
         ]);
     }
 

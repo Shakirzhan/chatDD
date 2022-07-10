@@ -30,6 +30,30 @@ class TodosController extends DefaultController
         }
     }
 
+    public function actionUpdate()
+    {
+        $params = Yii::$app->request->post();
+        $todo = Todos::find()->where(['id' => $params['id']])->one();
+
+        if($params['title']) {
+            $todo->title = $params['title'];
+        }
+
+        if($params['description']) {
+            $todo->description = $params['description'];
+        }
+
+        if($params['type']) {
+            $todo->type = $params['type'];
+        }
+
+        if($params['index']) {
+            $todo->index = $params['index'];
+        }
+
+        $todo->save();
+    }
+
     public function actionList()
     {
         $user_id = Yii::$app->user->id;

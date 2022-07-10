@@ -22,10 +22,9 @@ class UserController extends DefaultController
     {
         $form = new LoginForm();
         $params = Yii::$app->request->post();
-        $form->load($params, '');
 
-        if($form->validate()) {
-            return $form->login();
+        if($form->load($params, '') && $result = $form->login()) {
+            return $result;
         }
 
         Yii::$app->response->statusCode = Statuses::ERROR_500;
@@ -37,10 +36,9 @@ class UserController extends DefaultController
     {
         $form = new SignupForm();
         $params = Yii::$app->request->post();
-        $form->load($params, '');
 
-        if($form->validate()) {
-            return $form->signup();
+        if($form->load($params, '') && $result = $form->signup()) {
+            return $result;
         }
 
         Yii::$app->response->statusCode = Statuses::ERROR_500;

@@ -6,6 +6,11 @@ use yii\db\ActiveRecord;
 
 /**
  * Todos Class for todos table.
+ * @property string $title
+ * @property string $description
+ * @property string $type
+ * @property string $user_id
+ * @property string $index
  */
 class Todos extends ActiveRecord
 {
