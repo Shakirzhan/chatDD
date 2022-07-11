@@ -3,28 +3,13 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import WrapForm from '../components/WrapForm';
-
+import Copyright from '../components/Copyright';
 import api from '../api';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        Мессенджер
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 class Signup extends React.Component {
   constructor(props) {
     super(props);
-    
     this.state = { 
       username: '',
       password: '',
@@ -56,9 +41,7 @@ class Signup extends React.Component {
       localStorage.setItem('token', response.data.token);
       history('/', { replace: true })
     })
-    .catch(() => {
-        //TODO: handle the error when implemented
-    })
+    .catch(() => {})
   }
 
   render() {

@@ -24,6 +24,7 @@ class TodosController extends DefaultController
         $todo->type = $params['type'];
         $todo->title = $params['title'];
         $todo->description = $params['description'];
+        $todo->index = $params['index'];
 
         if($todo->save()) {
             return $todo;
@@ -32,8 +33,9 @@ class TodosController extends DefaultController
 
     public function actionUpdate()
     {
+        $user_id = Yii::$app->user->id;
         $params = Yii::$app->request->post();
-        $todo = Todos::find()->where(['id' => $params['id']])->one();
+        $todo = Todos::find()->where(['id' => $params['id'], 'user_id' => $user_id])->one();
 
         if($params['title']) {
             $todo->title = $params['title'];
@@ -47,17 +49,24 @@ class TodosController extends DefaultController
             $todo->type = $params['type'];
         }
 
-        if($params['index']) {
-            $todo->index = $params['index'];
+        if(is_numeric($params['index']) && $params['ids']) {
+            array_walk($params['ids'], function ($id, $index) {
+                $todoUpdateIndex = Todos::find()->where(['id' => $id])->one();
+                $todoUpdateIndex->index = $index;
+                $todoUpdateIndex->save();
+            });
         }
 
-        $todo->save();
+        return $todo->save();
     }
 
     public function actionList()
     {
         $user_id = Yii::$app->user->id;
 
-        return Todos::find()->where(['user_id' => $user_id])->all();
+        return Todos::find()
+            ->where(['user_id' => $user_id])
+            ->orderBy('index', 'ASC')
+            ->all();
     }
 }

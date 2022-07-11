@@ -8,7 +8,6 @@ const ColumnHeader = styled.div`
   margin-bottom: 20px;
   position: relative;
 `;
-
 const DroppableStyles = styled.div`
   padding: 10px;
   border-radius: 6px;
@@ -16,26 +15,22 @@ const DroppableStyles = styled.div`
   box-sizing: border-box;
   max-height: 100%
 `;
-
 const names = {
   "todo": "Сделать",
   "inProgress": "В ходе выполнения",
   "done": "Выполнено"
 }
-
 const Wrap = styled.div`
   height: 100%;
   & > div {
     height: 100%;
   }
 `;
-
 const FlyButton = styled.div`
   position: absolute;
   top: -5px;
   right: 0;
 `;
-
 const DraggableElement = ({ prefix, elements, children, deleteItem }) => (
   <DroppableStyles>
     <ColumnHeader>

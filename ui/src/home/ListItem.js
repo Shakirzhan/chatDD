@@ -20,30 +20,25 @@ const DragItem = styled.div`
   grid-gap: 20px;
   flex-direction: column;
 `;
-
 const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { title, description } }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const setData = (openDialog = () => {}) => () => {
     set({ name: 'title', value: item.title });
     set({ name: 'description', value: item.description });
     openDialog();
     handleClose();
   };
-
   const change = (onClose = () => {}) => () => {
     onChange({ title, description, index });
     onClose();
     resetData();
-  }
+  };
 
   return (
     <>
@@ -129,16 +124,14 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
     </>
   );
 };
-
 const mapStateToProps = (state) => ({
   form: state.todos.form
-})
-
+});
 const mapDispatchToProps = (dispatch) => ({
   set: (data = {}) => dispatch(setInput(data)),
   resetData: () => dispatch(reset()),
   onChange: (data = {}) => dispatch(change(data))
-})
+});
 
 export default connect(
   mapStateToProps,

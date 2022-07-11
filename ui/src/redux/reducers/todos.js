@@ -1,6 +1,7 @@
 import types from "../types"
 
 const initialState = {
+  token: '',
   form: {
     title: '',
     description: '',
@@ -16,6 +17,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case types.ADD_TOKEN:
+      return {
+        ...state,
+        token: action.token
+      }
     case types.ADD_TODO:
       return {
         ...state,

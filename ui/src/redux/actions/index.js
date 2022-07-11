@@ -33,3 +33,8 @@ export const change = ({ title, description, index }) => ({
 export const reset = () => ({
     type: types.RESET
 })
+
+export const addToken = (token) => ({
+    type: types.ADD_TOKEN,
+    token
+})

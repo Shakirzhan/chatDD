@@ -13,7 +13,6 @@ const DragDropContextContainer = styled.div`
   height: 100%;
   margin-top: 10px;
 `;
-
 const ListGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -30,7 +29,6 @@ const ListGrid = styled.div`
   padding-right: 0.5rem;
   box-sizing: border-box;
 `;
-
 const Wrap = styled.div`
   padding: 1rem;
   flex-direction: column;
@@ -38,25 +36,32 @@ const Wrap = styled.div`
   display: flex;
   box-sizing: border-box;
 `;
-
 const removeFromList = (list, index) => {
   const result = Array.from(list);
   const [removed] = result.splice(index, 1);
   return [removed, result];
 };
-
 const addToList = (list, index, element) => {
   const result = Array.from(list);
   result.splice(index, 0, element);
   return result;
 };
-
 const lists = ["todo", "inProgress", "done"];
 
 class DragList extends React.Component {
   componentDidMount() {
-    const { set } = this.props;
-    api.get('/list')
+    let { set, token } = this.props;
+    
+    if(!token) {
+      token = window.localStorage.getItem('token') || '';
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    api.get('/list', {
+      headers
+    })
     .then(response => {
       const list = response.data;
       const todo = list.filter(item => item.type == "todo").map(item => ({
@@ -72,15 +77,19 @@ class DragList extends React.Component {
       };
       set(elementsLists)
     })
-    .catch(() => {
-        //TODO: handle the error when implemented
-    })
+    .catch(() => {})
   }
 
   render() {
     const { elements, add, del, set, setData, resetData, form: { title, description } } = this.props;
 
     const onDragEnd = (result) => {
+      let { token } = this.props;
+
+      if(!token) {
+        token = window.localStorage.getItem('token') || '';
+      }
+
       if (!result.destination) {
         return;
       }
@@ -98,10 +107,29 @@ class DragList extends React.Component {
         result.destination.index,
         removedElement
       );
+      const id = removedElement.id;
+      const index = result.destination.index;
+      const ids = listCopy.todo.map(item => ({
+        id: item.id
+      }))
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+      api.post('/update', { id, index, ids }, {
+        headers
+      })
+      .then(() => {})
+      .catch(() => {})
       set(listCopy);
     };
   
     const addAction = (onClose = () => {}) => () => {
+      let { token } = this.props;
+
+      if(!token) {
+        token = window.localStorage.getItem('token') || '';
+      }
+
       if(!title || !description) {
         setData({ name: 'titleError', value: !title });
         setData({ name: 'descriptionError', value: !description });
@@ -109,17 +137,20 @@ class DragList extends React.Component {
         return;
       }
   
-      onClose(); 
+      onClose();
+      const index = elements.todo.length; 
       const type = "todo";
-      api.post('/create', { title, description, type })
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+      api.post('/create', { title, description, type, index }, {
+        headers
+      })
       .then(response => {
         const item = response.data;
         add(item)
       })
-      .catch(() => {
-          //TODO: handle the error when implemented
-      })
-      
+      .catch(() => {})
       resetData();
     }
   
@@ -173,7 +204,8 @@ class DragList extends React.Component {
 
 const mapStateToProps = (state) => ({
   elements: state.todos.elementsLists,
-  form: state.todos.form
+  form: state.todos.form,
+  token: state.todos.token
 })
 
 const mapDispatchToProps = (dispatch) => ({

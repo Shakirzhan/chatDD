@@ -8,13 +8,13 @@ import WrappHistory from "./components/WrappHistory";
 const PAGE_HOME = '/';
 const PAGE_LOGIN = '/login';
 
-const CheckToken = props => {
+const CheckToken = () => {
   // const { token } = props;
   const token = window.localStorage.getItem('token');
+
   if(location.pathname == PAGE_HOME && !token) {
     return <Navigate to="/login" />;
-  }
-  if(location.pathname == PAGE_LOGIN && token) {
+  } else if(location.pathname == PAGE_LOGIN && token) {
     return <Navigate to="/" />;
   }
 
@@ -24,7 +24,6 @@ const CheckToken = props => {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    
     this.state = { 
       token: null,
     };
@@ -32,6 +31,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const token = window.localStorage.getItem('token');
+    
     if(token) {
       this.setState({ token });
     }

@@ -1,30 +1,17 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import WrapForm from '../components/WrapForm';
-
+import Copyright from '../components/Copyright';
+import { addToken } from '../redux/actions';
 import api from '../api';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        Мессенджер
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    
     this.state = { 
       username: '',
       password: '',
@@ -40,6 +27,7 @@ class Login extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     const { username, password } = this.state;
+    const { setToken } = this.props;
     const history = this.props.history;
     this.setState({ usernameError: !username });
     this.setState({ passwordError: !password });
@@ -52,11 +40,10 @@ class Login extends React.Component {
     .then(response => {
       const token = response.data.token;
       localStorage.setItem('token', token);
+      setToken(token);
       history('/', { replace: true })
     })
-    .catch(() => {
-        //TODO: handle the error when implemented
-    })
+    .catch(() => {})
   }
 
   render() {
@@ -113,4 +100,15 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapStateToProps = () => ({
+  
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  setToken: (token) => dispatch(addToken(token))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)
