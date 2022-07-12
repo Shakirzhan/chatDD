@@ -73,8 +73,14 @@ class DragList extends React.Component {
         ...item,
         id: item.id.toString()
       }))
-      const inProgress = list.filter(item => item.type == "inProgress")
-      const done = list.filter(item => item.type == "done")
+      const inProgress = list.filter(item => item.type == "inProgress").map(item => ({
+        ...item,
+        id: item.id.toString()
+      }))
+      const done = list.filter(item => item.type == "done").map(item => ({
+        ...item,
+        id: item.id.toString()
+      }))
       const elementsLists = {
         todo,
         inProgress,
@@ -113,13 +119,16 @@ class DragList extends React.Component {
       );
       const id = removedElement.id;
       const index = result.destination.index;
-      const ids = listCopy.todo.map(item => ({
-        id: item.id
-      }))
+      const type = result.destination.droppableId;
+      const ids = {
+        todo: listCopy.todo.map(item => ({ id: item.id })),
+        inProgress: listCopy.inProgress.map(item => ({ id: item.id })),
+        done: listCopy.done.map(item => ({ id: item.id })),
+      };
       const headers = {
         Authorization: `Bearer ${token}`
       };
-      api.post('/update', { id, index, ids }, {
+      api.post('/update', { id, index, ids, type }, {
         headers
       })
       .then(() => {})
@@ -151,13 +160,14 @@ class DragList extends React.Component {
       })
       .then(response => {
         const item = response.data;
+        item.id = item.id.toString();
         add(item)
       })
       .catch(() => {})
       resetData();
     }
     const deleteAction = (onClose = () => {}, { index = null, id = null }) => () => {
-      del(index);
+      del(id);
       const token = window.localStorage.getItem('token') || '';
       const headers = {
         Authorization: `Bearer ${token}`

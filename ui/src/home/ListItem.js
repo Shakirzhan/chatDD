@@ -36,8 +36,9 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
     handleClose();
   };
   const change = (onClose = () => {}) => () => {
-    onChange({ title, description, index });
+    const type = item.type;
     const id = item.id;
+    onChange({ title, description, id, type });
     const token = window.localStorage.getItem('token') || '';
     const headers = {
       Authorization: `Bearer ${token}`

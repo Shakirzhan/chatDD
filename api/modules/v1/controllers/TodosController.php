@@ -62,7 +62,17 @@ class TodosController extends DefaultController
         }
 
         if(is_numeric($params['index']) && $params['ids']) {
-            array_walk($params['ids'], function($id, $index) {
+            array_walk($params['ids']['done'], function($id, $index) {
+                $todoUpdateIndex = Todos::find()->where(['id' => $id])->one();
+                $todoUpdateIndex->index = $index;
+                $todoUpdateIndex->save();
+            });
+            array_walk($params['ids']['inProgress'], function($id, $index) {
+                $todoUpdateIndex = Todos::find()->where(['id' => $id])->one();
+                $todoUpdateIndex->index = $index;
+                $todoUpdateIndex->save();
+            });
+            array_walk($params['ids']['todo'], function($id, $index) {
                 $todoUpdateIndex = Todos::find()->where(['id' => $id])->one();
                 $todoUpdateIndex->index = $index;
                 $todoUpdateIndex->save();

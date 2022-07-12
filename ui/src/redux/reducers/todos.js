@@ -42,7 +42,9 @@ export default function(state = initialState, action) {
         ...state,
         elementsLists: {
           ...state.elementsLists,
-          todo: state.elementsLists.todo.filter((_todoItem, itemIndex) => itemIndex != action.index)
+          todo: state.elementsLists.todo.filter((todoItem) => todoItem.id != action.id),
+          inProgress: state.elementsLists.inProgress.filter((todoItem) => todoItem.id != action.id),
+          done: state.elementsLists.done.filter((todoItem) => todoItem.id != action.id),
         }
       }
     case types.SET_TODOS:
@@ -62,9 +64,8 @@ export default function(state = initialState, action) {
         return {
           ...state,
           elementsLists: {
-            ...state.elementsLists,
-            todo: state.elementsLists.todo.map((todo, index) => {
-              if(index === action.index) {
+            todo: state.elementsLists.todo.map((todo) => {
+              if(todo.id == action.id) {
                 return {
                   ...todo,
                   title: action.title,
@@ -73,7 +74,29 @@ export default function(state = initialState, action) {
               }
 
               return todo;
-            })
+            }),
+            inProgress: state.elementsLists.inProgress.map((todo) => {
+              if(todo.id == action.id) {
+                return {
+                  ...todo,
+                  title: action.title,
+                  description: action.description,
+                }
+              }
+
+              return todo;
+            }),
+            done: state.elementsLists.done.map((todo) => {
+              if(todo.id == action.id) {
+                return {
+                  ...todo,
+                  title: action.title,
+                  description: action.description,
+                }
+              }
+
+              return todo;
+            }),
           }
         }
     case types.RESET: 
