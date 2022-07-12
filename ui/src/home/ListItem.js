@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import WrapDialog from "../components/WrapDialog";
 import TaskForm from "../components/TaskForm";
 import { setInput, reset, change } from "../redux/actions";
+import api from '../api';
 
 const DragItem = styled.div`
   margin: 0 0 8px 0;
@@ -36,6 +37,16 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
   };
   const change = (onClose = () => {}) => () => {
     onChange({ title, description, index });
+    const id = item.id;
+    const token = window.localStorage.getItem('token') || '';
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    api.post('/update', { id, title, description }, {
+      headers
+    })
+    .then(() => {})
+    .catch(() => {})
     onClose();
     resetData();
   };
@@ -96,7 +107,7 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
                       <WrapDialog 
                         title="Удалить элемент"
                         actions={(onClose = () => {}) => (<>
-                          <Button onClick={deleteItem(onClose, index)} autoFocus>
+                          <Button onClick={deleteItem(onClose, { index, id: item.id })} autoFocus>
                             Удалить
                           </Button>
                       </>)}

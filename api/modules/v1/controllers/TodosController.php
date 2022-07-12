@@ -21,6 +21,7 @@ class TodosController extends DefaultController
         $params = Yii::$app->request->post();
         $todo = new Todos();
         $todo->user_id = Yii::$app->user->id;
+        $todo->status = Todos::ACTIVE_STATUS;
         $todo->type = $params['type'];
         $todo->title = $params['title'];
         $todo->description = $params['description'];
@@ -31,11 +32,22 @@ class TodosController extends DefaultController
         }
     }
 
+    public function actionDelete($id)
+    {
+        $todo = Todos::find()
+            ->where(['id' => $id])
+            ->one();
+        $todo->status = Todos::REMOVED_STATUS;
+        $todo->save();
+    }
+
     public function actionUpdate()
     {
         $user_id = Yii::$app->user->id;
         $params = Yii::$app->request->post();
-        $todo = Todos::find()->where(['id' => $params['id'], 'user_id' => $user_id])->one();
+        $todo = Todos::find()
+            ->where(['id' => $params['id'], 'user_id' => $user_id])
+            ->one();
 
         if($params['title']) {
             $todo->title = $params['title'];
@@ -50,7 +62,7 @@ class TodosController extends DefaultController
         }
 
         if(is_numeric($params['index']) && $params['ids']) {
-            array_walk($params['ids'], function ($id, $index) {
+            array_walk($params['ids'], function($id, $index) {
                 $todoUpdateIndex = Todos::find()->where(['id' => $id])->one();
                 $todoUpdateIndex->index = $index;
                 $todoUpdateIndex->save();
@@ -66,6 +78,7 @@ class TodosController extends DefaultController
 
         return Todos::find()
             ->where(['user_id' => $user_id])
+            ->andWhere(['status' => Todos::ACTIVE_STATUS])
             ->orderBy('index', 'ASC')
             ->all();
     }

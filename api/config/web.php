@@ -84,6 +84,8 @@ $config = [
                 'OPTIONS create' => 'v1/todos/options',
                 'POST update' => 'v1/todos/update',
                 'OPTIONS update' => 'v1/todos/options',
+                'DELETE delete/<id:\d+>' => 'v1/todos/delete',
+                'OPTIONS delete/<id:\d+>' => 'v1/todos/options',
                 'GET list' => 'v1/todos/list',
                 'OPTIONS list' => 'v1/todos/options',
             ]

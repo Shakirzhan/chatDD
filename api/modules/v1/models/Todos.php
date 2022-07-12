@@ -11,13 +11,18 @@ use yii\db\ActiveRecord;
  * @property string $type
  * @property string $user_id
  * @property string $index
+ * @property string $status
  */
 class Todos extends ActiveRecord
 {
+
+    const ACTIVE_STATUS = 1;
+    const REMOVED_STATUS = 0;
+
     public function rules()
     {
         return [
-            ['user_id', 'number'],
+            [['user_id', 'status'], 'number'],
             [['type', 'title', 'description'], 'string'],
         ];
     }

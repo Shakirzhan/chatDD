@@ -59,6 +59,11 @@ class DragList extends React.Component {
     const headers = {
       Authorization: `Bearer ${token}`
     };
+
+    if(!token) {
+      return;
+    }
+
     api.get('/list', {
       headers
     })
@@ -82,7 +87,6 @@ class DragList extends React.Component {
 
   render() {
     const { elements, add, del, set, setData, resetData, form: { title, description } } = this.props;
-
     const onDragEnd = (result) => {
       let { token } = this.props;
 
@@ -122,7 +126,6 @@ class DragList extends React.Component {
       .catch(() => {})
       set(listCopy);
     };
-  
     const addAction = (onClose = () => {}) => () => {
       let { token } = this.props;
 
@@ -153,12 +156,19 @@ class DragList extends React.Component {
       .catch(() => {})
       resetData();
     }
-  
-    const deleteAction = (onClose = () => {}, index = null) => () => {
+    const deleteAction = (onClose = () => {}, { index = null, id = null }) => () => {
       del(index);
+      const token = window.localStorage.getItem('token') || '';
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+      api.delete('/delete/'+id, {
+        headers
+      })
+      .then(() => {})
+      .catch(() => {})
       onClose();
     }
-  
     const cancel = (onClose = () => {}) => () => {
       resetData();
       onClose();
