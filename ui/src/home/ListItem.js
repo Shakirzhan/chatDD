@@ -14,6 +14,7 @@ import WrapDialog from "../components/WrapDialog";
 import TaskForm from "../components/TaskForm";
 import { setInput, reset, change } from "../redux/actions";
 import api from '../api';
+import req from '../req';
 
 const DragItem = styled.div`
   margin: 0 0 8px 0;
@@ -39,10 +40,7 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
     const type = item.type;
     const id = item.id;
     onChange({ title, description, id, type });
-    const token = window.localStorage.getItem('token') || '';
-    const headers = {
-      Authorization: `Bearer ${token}`
-    };
+    const headers = req.getHeaders()
     api.post('/update', { id, title, description }, {
       headers
     })

@@ -8,6 +8,7 @@ import WrapDialog from "../components/WrapDialog";
 import TaskForm from "../components/TaskForm";
 import { addItem, deleteItem, setTodos, setInput, reset } from "../redux/actions";
 import api from '../api';
+import req from '../req';
 
 const DragDropContextContainer = styled.div`
   height: 100%;
@@ -50,55 +51,19 @@ const lists = ["todo", "inProgress", "done"];
 
 class DragList extends React.Component {
   componentDidMount() {
-    let { set, token } = this.props;
-    
-    if(!token) {
-      token = window.localStorage.getItem('token') || '';
+    const { set, token } = this.props;
+    const headers = req.getHeaders(token)
+    const res = req.list(headers)
+
+    if(res) {
+      res.then((elementsLists) => set(elementsLists))
     }
-
-    const headers = {
-      Authorization: `Bearer ${token}`
-    };
-
-    if(!token) {
-      return;
-    }
-
-    api.get('/list', {
-      headers
-    })
-    .then(response => {
-      const list = response.data;
-      const todo = list.filter(item => item.type == "todo").map(item => ({
-        ...item,
-        id: item.id.toString()
-      }))
-      const inProgress = list.filter(item => item.type == "inProgress").map(item => ({
-        ...item,
-        id: item.id.toString()
-      }))
-      const done = list.filter(item => item.type == "done").map(item => ({
-        ...item,
-        id: item.id.toString()
-      }))
-      const elementsLists = {
-        todo,
-        inProgress,
-        done
-      };
-      set(elementsLists)
-    })
-    .catch(() => {})
   }
 
   render() {
     const { elements, add, del, set, setData, resetData, form: { title, description } } = this.props;
     const onDragEnd = (result) => {
-      let { token } = this.props;
-
-      if(!token) {
-        token = window.localStorage.getItem('token') || '';
-      }
+      const { token } = this.props;
 
       if (!result.destination) {
         return;
@@ -126,9 +91,7 @@ class DragList extends React.Component {
         inProgress: listCopy.inProgress.map(item => ({ id: item.id })),
         done: listCopy.done.map(item => ({ id: item.id })),
       };
-      const headers = {
-        Authorization: `Bearer ${token}`
-      };
+      const headers = req.getHeaders(token)
       api.post('/update', { id, index, ids, type }, {
         headers
       })
@@ -153,9 +116,7 @@ class DragList extends React.Component {
       onClose();
       const index = elements.todo.length; 
       const type = "todo";
-      const headers = {
-        Authorization: `Bearer ${token}`
-      };
+      const headers = req.getHeaders(token)
       api.post('/create', { title, description, type, index }, {
         headers
       })
@@ -168,11 +129,9 @@ class DragList extends React.Component {
       resetData();
     }
     const deleteAction = (onClose = () => {}, data) => () => {
+      let { token } = this.props;
       del(data);
-      const token = window.localStorage.getItem('token') || '';
-      const headers = {
-        Authorization: `Bearer ${token}`
-      };
+      const headers = req.getHeaders(token)
       api.delete('/delete/'+data.id, {
         headers
       })
