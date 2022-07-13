@@ -50,19 +50,11 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
-                [
+                'file' => [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['info'],
-                    'categories' => ['test_category'],
-                    'logFile' => '@app/runtime/logs/cron/success.log',
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error'],
-                    'categories' => ['test_category'],
-                    'logFile' => '@app/runtime/logs/cron/error.log',
+                    'levels' => ['error', 'warning'],
+                    'logFile' => '@runtime/logs/error.log',
                 ],
             ],
         ],
