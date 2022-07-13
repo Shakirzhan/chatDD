@@ -108,7 +108,7 @@ const ListItem = ({ item, index, deleteItem, set, resetData, onChange, form: { t
                       <WrapDialog 
                         title="Удалить элемент"
                         actions={(onClose = () => {}) => (<>
-                          <Button onClick={deleteItem(onClose, { index, id: item.id })} autoFocus>
+                          <Button onClick={deleteItem(onClose, item)} autoFocus>
                             Удалить
                           </Button>
                       </>)}

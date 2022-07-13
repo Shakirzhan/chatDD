@@ -7,8 +7,9 @@ export const addItem = (item) => ({
     description: item.description
 })
 
-export const deleteItem = (id) => ({
+export const deleteItem = ({ id, type }) => ({
     type: types.DELETE_TODO,
+    mainType: type,
     id
 })
 
@@ -23,8 +24,9 @@ export const setInput = ({ name, value }) => ({
     value
 })
 
-export const change = ({ title, description, id }) => ({
+export const change = ({ title, description, id, type }) => ({
     type: types.CHANGE,
+    mainType: type,
     title, 
     description, 
     id,

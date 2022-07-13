@@ -106,10 +106,12 @@ class DragList extends React.Component {
   
       const listCopy = { ...elements };
       const sourceList = listCopy[result.source.droppableId];
+      const type = result.destination.droppableId;
       const [removedElement, newSourceList] = removeFromList(
         sourceList,
         result.source.index
       );
+      removedElement.type = type;
       listCopy[result.source.droppableId] = newSourceList;
       const destinationList = listCopy[result.destination.droppableId];
       listCopy[result.destination.droppableId] = addToList(
@@ -119,7 +121,6 @@ class DragList extends React.Component {
       );
       const id = removedElement.id;
       const index = result.destination.index;
-      const type = result.destination.droppableId;
       const ids = {
         todo: listCopy.todo.map(item => ({ id: item.id })),
         inProgress: listCopy.inProgress.map(item => ({ id: item.id })),
@@ -166,13 +167,13 @@ class DragList extends React.Component {
       .catch(() => {})
       resetData();
     }
-    const deleteAction = (onClose = () => {}, { index = null, id = null }) => () => {
-      del(id);
+    const deleteAction = (onClose = () => {}, data) => () => {
+      del(data);
       const token = window.localStorage.getItem('token') || '';
       const headers = {
         Authorization: `Bearer ${token}`
       };
-      api.delete('/delete/'+id, {
+      api.delete('/delete/'+data.id, {
         headers
       })
       .then(() => {})
@@ -230,7 +231,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   add: (item = {}) => dispatch(addItem(item)),
-  del: (index = null) => dispatch(deleteItem(index)),
+  del: (index = {}) => dispatch(deleteItem(index)),
   set: (todos = {}) => dispatch(setTodos(todos)),
   setData: (data = {}) => dispatch(setInput(data)),
   resetData: () => dispatch(reset())
