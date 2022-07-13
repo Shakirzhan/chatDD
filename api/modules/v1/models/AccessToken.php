@@ -48,7 +48,7 @@ class AccessToken extends ActiveRecord
     public static function generateAuthKey($user)
     {
         $accessToken = new AccessToken();
-        $accessToken->user_id = User::find()->count() + 1;
+        $accessToken->user_id = $user->id ?? User::find()->count() + 1;
         $accessToken->token = $user->auth_key;
         $accessToken->used_at = strtotime("now");
         $accessToken->expire_at = $accessToken->tokenExpiration + $accessToken->used_at;

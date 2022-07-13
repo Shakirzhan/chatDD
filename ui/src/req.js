@@ -3,6 +3,10 @@ import api from './api';
 const getHeaders = (token = null) => {
     const _token = token || window.localStorage.getItem('token') || '';
 
+    if(!_token) {
+      return false;
+    }
+
     return {
         Authorization: `Bearer ${_token}`
     };
