@@ -3,6 +3,7 @@
 namespace app\modules\v1\models;
 
 use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * Todos Class for todos table.
@@ -30,5 +31,12 @@ class Todos extends ActiveRecord
     public static function tableName()
     {
         return '{{%todos}}';
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
     }
 }

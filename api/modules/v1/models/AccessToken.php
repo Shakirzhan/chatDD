@@ -4,7 +4,6 @@ namespace app\modules\v1\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use app\modules\v1\models\User;
 
 /**
  * AccessToken Class for access_token table.
@@ -48,7 +47,7 @@ class AccessToken extends ActiveRecord
     public static function generateAuthKey($user)
     {
         $accessToken = new AccessToken();
-        $accessToken->user_id = $user->id ?? User::find()->count() + 1;
+        $accessToken->user_id = $user->id ?? \app\modules\v1\models\User::find()->count() + 1;
         $accessToken->token = $user->auth_key;
         $accessToken->used_at = strtotime("now");
         $accessToken->expire_at = $accessToken->tokenExpiration + $accessToken->used_at;
