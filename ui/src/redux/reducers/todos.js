@@ -33,6 +33,7 @@ export default function(state = initialState, action) {
               id: action.id,
               title: action.title,
               description: action.description,
+              type: action.setType,
             }
           ],
         }

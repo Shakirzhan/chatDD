@@ -100,11 +100,7 @@ class DragList extends React.Component {
       set(listCopy);
     };
     const addAction = (onClose = () => {}) => () => {
-      let { token } = this.props;
-
-      if(!token) {
-        token = window.localStorage.getItem('token') || '';
-      }
+      const { token } = this.props;
 
       if(!title || !description) {
         setData({ name: 'titleError', value: !title });
@@ -129,7 +125,7 @@ class DragList extends React.Component {
       resetData();
     }
     const deleteAction = (onClose = () => {}, data) => () => {
-      let { token } = this.props;
+      const { token } = this.props;
       del(data);
       const headers = req.getHeaders(token)
       api.delete('/delete/'+data.id, {

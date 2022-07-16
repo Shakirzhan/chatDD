@@ -4,7 +4,8 @@ export const addItem = (item) => ({
     type: types.ADD_TODO,
     id: item.id,
     title: item.title,
-    description: item.description
+    description: item.description,
+    setType: item.type,
 })
 
 export const deleteItem = ({ id, type }) => ({
